@@ -9,9 +9,8 @@ export default function Layout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { loading, session } = useSessionData(); // Use the custom hook
+    const { loading, session } = useSessionData();
 
-    // If session is loading, show a loading state
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -20,22 +19,19 @@ export default function Layout({
         );
     }
 
-    // If no session (user is not authenticated), you can redirect or show a message
     if (!session) {
         return (
             redirect('/signin')
         );
     }
 
-    // Assuming the role is stored in session.user.role
-    const role = session.user?.role || 'student'; // Default to 'Student' if no role is available
+    const role = session.user?.role || 'student';
 
     return (
         <div className="flex">
-            {/* Pass the role to Sidebar component */}
             <Sidebar role={role} />
 
-            <main className="flex-1 p-4 bg-gray-50">
+            <main className="flex-1 pt-4 bg-gray-50 px-40">
                 {children}
             </main>
         </div>

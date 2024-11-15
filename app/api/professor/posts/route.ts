@@ -3,17 +3,36 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-
 export async function GET() {
     try {
+        const session = await getServerSession(authOptions);
+
+        if (!session || session.user.role !== 'professor') {
+            return NextResponse.json(
+                { error: 'Unauthorized access' },
+                { status: 403 }
+            );
+        }
+
+        const professorId = session.user.id;
         const posts = await prisma.post.findMany({
+            where: { professorId },
             include: {
                 professor: {
                     select: { name: true },
                 },
             },
         });
-        return NextResponse.json(posts, { status: 200 });
+
+        const formattedPosts = posts.map((post) => ({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            professorName: post.professor.name,
+            createdAt: post.createdAt,
+        }));
+
+        return NextResponse.json(formattedPosts, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Error fetching posts' }, { status: 500 });

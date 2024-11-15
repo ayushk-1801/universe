@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GoHomeFill } from 'react-icons/go';
 import { CgNotes } from "react-icons/cg";
@@ -9,7 +9,7 @@ import { MdForwardToInbox } from "react-icons/md";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { Button } from './ui/button';
 import { Icon } from 'next/dist/lib/metadata/types/metadata-types';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 interface CardProps {
     title: string;
@@ -45,11 +45,16 @@ interface SidebarProps {
 
 const Sidebar = ({ role }: SidebarProps) => {
     const [activeCard, setActiveCard] = useState('/home');
+    const { data: session } = useSession();
+
+    const getInitials = (name: string) => {
+        const nameParts = name.split(' ');
+        return nameParts.map((part) => part.charAt(0).toUpperCase()).join('');
+    };
 
     return (
         <div className="flex flex-col justify-between h-screen max-w-64 w-2/12 bg-gray-100 shadow-md px-3 py-4">
             <div>
-
                 <div className="flex items-center mb-6 text-violet-600">
                     <h1 className="text-2xl font-bold">Universe</h1>
                 </div>
@@ -103,7 +108,14 @@ const Sidebar = ({ role }: SidebarProps) => {
 
             </div>
 
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-start justify-start mt-8 w-full">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center">
+                        {session?.user?.name ? getInitials(session.user.name) : 'U'}
+                    </div>
+                    <span className="font-semibold text-lg">{session?.user?.name}</span>
+                </div>
+
                 <Button className="w-full" onClick={() => signOut()}>
                     Logout
                 </Button>
