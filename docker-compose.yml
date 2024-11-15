@@ -1,0 +1,26 @@
+services:
+  postgres-db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    volumes:
+      - universe-volume:/var/lib/postgresql/data
+
+  universe-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres-db:5432/database
+    depends_on:
+      - postgres-db
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  universe-volume:
