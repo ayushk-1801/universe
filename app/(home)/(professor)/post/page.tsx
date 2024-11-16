@@ -70,45 +70,64 @@ const PostsPage = () => {
     };
 
     if (status === 'loading') {
-        return <div>Loading...</div>;
+        return <div className="text-center text-xl">Loading...</div>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div className="text-red-500 text-center">{error}</div>;
     }
 
     return (
-        <div>
-            <h1 className='font-bold text-xl'>Your Posts</h1>
+        <div className="container mx-auto p-6">
+            <h1 className="font-bold text-3xl text-center mb-6">Your Posts</h1>
 
-            <form onSubmit={handlePostSubmit}>
+            <form onSubmit={handlePostSubmit} className="space-y-4 bg-gray-100 p-6 rounded-lg shadow-md">
                 <div>
-                    Title:
+                    <label htmlFor="title" className="block text-lg font-medium text-gray-700">Title</label>
                     <input
+                        id="title"
                         type="text"
-                        placeholder="Title"
+                        placeholder="Enter title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         required
                     />
                 </div>
+
                 <div>
-                    Content:
+                    <label htmlFor="content" className="block text-lg font-medium text-gray-700">Content</label>
                     <textarea
-                        placeholder="Content"
+                        id="content"
+                        placeholder="Enter content"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
+                        className="w-full p-3 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        rows={6}
                         required
                     />
                 </div>
-                <Button type="submit">Create Post</Button>
+
+                <Button type="submit" className="w-full" size={"lg"}>
+                    Create Post
+                </Button>
             </form>
 
-            {posts.length === 0 ? (
-                <p>No posts available.</p>
-            ) : (
-                posts.map((post) => <PostCard key={post.id} post={post} />)
-            )}
+            <div className="mt-6">
+                {posts.length === 0 ? (
+                    <p className="text-center text-gray-500">No posts available.</p>
+                ) : (
+                    <div>
+                        <h2 className="font-bold text-2xl mb-4">All Posts</h2>
+                        <div className="space-y-6">
+                            {posts.map((post) => (
+                                <PostCard key={post.id} post={post} />
+                            ))}
+                        </div>
+
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

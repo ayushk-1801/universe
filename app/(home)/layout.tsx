@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
 import { useSessionData } from "../session";
 import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Navbar";
 import { redirect } from "next/navigation";
 
 export default function Layout({
@@ -20,20 +21,25 @@ export default function Layout({
     }
 
     if (!session) {
-        return (
-            redirect('/signin')
-        );
+        return redirect('/signin');
     }
 
     const role = session.user?.role || 'student';
 
     return (
-        <div className="flex">
-            <Sidebar role={role} />
+        <div className="flex flex-col min-h-screen">
+            {/* Navbar */}
+            <Navbar session={session} />
 
-            <main className="flex-1 pt-4 bg-gray-50 px-40">
-                {children}
-            </main>
+            <div className="flex flex-1">
+                {/* Sidebar with fixed height */}
+                <Sidebar role={role} className="h-screen" />
+
+                {/* Main content with scrolling enabled */}
+                <main className="flex-1 pt-4 bg-gray-50 px-40 overflow-auto">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 }

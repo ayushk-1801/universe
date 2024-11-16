@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { GoHomeFill } from 'react-icons/go';
 import { CgNotes } from "react-icons/cg";
@@ -9,7 +9,7 @@ import { MdForwardToInbox } from "react-icons/md";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { Button } from './ui/button';
 import { Icon } from 'next/dist/lib/metadata/types/metadata-types';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 interface CardProps {
     title: string;
@@ -53,72 +53,58 @@ const Sidebar = ({ role }: SidebarProps) => {
     };
 
     return (
-        <div className="flex flex-col justify-between h-screen max-w-64 w-2/12 bg-gray-100 shadow-md px-3 py-4">
-            <div>
-                <div className="flex items-center mb-6 text-violet-600">
-                    <h1 className="text-2xl font-bold">Universe</h1>
-                </div>
-                {
-                    role === 'student' && (
-                        <nav className="flex flex-col gap-2 justify-start">
-                            <Card
-                                title="Home"
-                                link="/home"
-                                Icon={GoHomeFill}
-                                isActive={activeCard === '/home'}
-                                onClick={() => setActiveCard('/home')}
-                            />
-                            <Card
-                                title="Proposal"
-                                link="/proposal"
-                                Icon={CgNotes}
-                                isActive={activeCard === '/proposal'}
-                                onClick={() => setActiveCard('/proposal')}
-                            />
-                            <Card
-                                title="Resources"
-                                link="/resources"
-                                Icon={PiBooksFill}
-                                isActive={activeCard === '/resources'}
-                                onClick={() => setActiveCard('/resources')}
-                            />
-                        </nav>
-                    )
-                }
-                {
-                    role === 'professor' && (
-                        <nav className="flex flex-col gap-2 justify-start">
-                            <Card
-                                title="Inbox"
-                                link="/inbox"
-                                Icon={MdForwardToInbox}
-                                isActive={activeCard === '/inbox'}
-                                onClick={() => setActiveCard('/inbox')}
-                            />
-                            <Card
-                                title="Post"
-                                link="/post"
-                                Icon={MdOutlinePostAdd}
-                                isActive={activeCard === '/post'}
-                                onClick={() => setActiveCard('/post')}
-                            />
-                        </nav>
-                    )
-                }
-
+        <div className="flex flex-col h-screen w-64 bg-gray-100 shadow-md px-3 py-4">
+            <div className="flex flex-col flex-grow">
+                {role === 'student' && (
+                    <nav className="flex flex-col gap-2 justify-start">
+                        <Card
+                            title="Home"
+                            link="/home"
+                            Icon={GoHomeFill}
+                            isActive={activeCard === '/home'}
+                            onClick={() => setActiveCard('/home')}
+                        />
+                        <Card
+                            title="Proposal"
+                            link="/proposal"
+                            Icon={CgNotes}
+                            isActive={activeCard === '/proposal'}
+                            onClick={() => setActiveCard('/proposal')}
+                        />
+                        <Card
+                            title="Resources"
+                            link="/resources"
+                            Icon={PiBooksFill}
+                            isActive={activeCard === '/resources'}
+                            onClick={() => setActiveCard('/resources')}
+                        />
+                    </nav>
+                )}
+                {role === 'professor' && (
+                    <nav className="flex flex-col gap-2 justify-start">
+                        <Card
+                            title="Inbox"
+                            link="/inbox"
+                            Icon={MdForwardToInbox}
+                            isActive={activeCard === '/inbox'}
+                            onClick={() => setActiveCard('/inbox')}
+                        />
+                        <Card
+                            title="Post"
+                            link="/post"
+                            Icon={MdOutlinePostAdd}
+                            isActive={activeCard === '/post'}
+                            onClick={() => setActiveCard('/post')}
+                        />
+                    </nav>
+                )}
             </div>
 
-            <div className="flex flex-col items-start justify-start mt-8 w-full">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center">
-                        {session?.user?.name ? getInitials(session.user.name) : 'U'}
-                    </div>
-                    <span className="font-semibold text-lg">{session?.user?.name}</span>
+            <div className="flex items-center gap-3 mt-auto mb-16 hover:bg-gray-200 cursor-pointer p-3 rounded-lg">
+                <div className="w-8 h-8 rounded-full bg-gray-500 text-white flex items-center justify-center">
+                    {session?.user?.name ? getInitials(session.user.name) : 'U'}
                 </div>
-
-                <Button className="w-full" onClick={() => signOut()}>
-                    Logout
-                </Button>
+                <span className="font-semibold text-lg">{session?.user?.name}</span>
             </div>
         </div>
     );
