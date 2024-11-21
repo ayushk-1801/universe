@@ -1,34 +1,47 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Student {
-    id       Int    @id @default(autoincrement())
-    name     String
-    email    String @unique
-    password String
-    role     String @default("student")
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     @default("student")
+  proposals Proposal[]
 }
 
 model Professor {
-    id       Int    @id @default(autoincrement())
-    name     String
-    email    String @unique
-    password String
-    role     String @default("professor")
-    posts    Post[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     @default("professor")
+  posts     Post[]
+  proposals Proposal[]
 }
 
 model Post {
-    id          Int       @id @default(autoincrement())
-    title       String
-    content     String
-    professorId Int
-    professor   Professor @relation(fields: [professorId], references: [id])
-    createdAt   DateTime  @default(now())
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  professorId Int
+  professor   Professor @relation(fields: [professorId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+model Proposal {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  studentId   Int
+  student     Student   @relation(fields: [studentId], references: [id])
+  professorId Int
+  professor   Professor @relation(fields: [professorId], references: [id])
+  createdAt   DateTime  @default(now())
 }
